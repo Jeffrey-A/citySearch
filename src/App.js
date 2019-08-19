@@ -4,6 +4,7 @@ import Header from "./components/Header";
 import axios from "axios";
 import City from "./components/City";
 import ZipCodeDisplay from "./components/ZipCodes";
+import Loader from "react-loader-spinner";
 
 class App extends React.Component {
   constructor(props) {
@@ -11,7 +12,10 @@ class App extends React.Component {
     this.state = {
       value: "",
       zipcodes: "",
-      cities: ""
+      cities: "",
+      isPending: false,
+      isSubmitted: false,
+      isError: false
     };
 
     this.inputValues = this.inputValues.bind(this);
@@ -26,6 +30,7 @@ class App extends React.Component {
 
   getZipcodes(e) {
     e.preventDefault();
+    this.setState({ isSubmitted: true, isPending: true });
     this.info = [];
 
     let cityName = this.state.value.toUpperCase();
@@ -37,7 +42,9 @@ class App extends React.Component {
         this.setState({ zipcodes: zipcodes, value: "" });
         this.getCities();
       })
-      .catch(error => {});
+      .catch(error => {
+          this.setState({isError: true, isPending:false, isSubmitted: false})
+      });
   }
 
   createCities() {
@@ -69,19 +76,40 @@ class App extends React.Component {
       axios
         .get("http://ctp-zip-api.herokuapp.com/zip/" + this.state.zipcodes[i])
         .then(response => {
-          //console.log(response.data);
           this.info = this.info.concat(response.data);
           this.setStateForCities();
+          this.setState({ isPending: false });
         })
-        .catch(error => {});
+        .catch(error => {
+          this.setState({isError: true, isPending:false, isSubmitted: false})
+        });
     }
   }
 
   render() {
+    const { isPending, isSubmitted, isError } = this.state;
+    let loader;
+    if (isError){
+      loader = <h2 className="center">Sorry, an error has ocurred or the city was not found.</h2>
+    }
+    if (isPending && isSubmitted) {
+      loader = (
+        <div
+          style={{
+            width: "100%",
+            height: "100",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+        >
+          <Loader type="ThreeDots" color="#000000" height="100" width="100" />
+        </div>
+      );
+    }
     return (
       <div>
         <Header header="City Search" />
-
         <form className="input-getter-div" onSubmit={this.getZipcodes}>
           <label htmlFor="input-box">City Name:</label>
           <input
@@ -92,7 +120,7 @@ class App extends React.Component {
             placeholder="Enter city name"
           />
         </form>
-
+        {loader}
         <ZipCodeDisplay zipcodes={this.state.zipcodes} />
 
         {this.state.cities.length ? (
