@@ -1,10 +1,9 @@
 import React from "react";
 import "./App.css";
-import Header from "./Header";
+import Header from "./components/Header";
 import axios from "axios";
-import City from "./City";
-import ZipCodeDisplay from "./ZipCodes";
-import State from "./States";
+import City from "./components/City";
+import ZipCodeDisplay from "./components/ZipCodes";
 
 class App extends React.Component {
   constructor(props) {
