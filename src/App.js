@@ -30,20 +30,25 @@ class App extends React.Component {
 
   getZipcodes(e) {
     e.preventDefault();
-    this.setState({ isSubmitted: true, isPending: true });
+    this.setState({
+      isSubmitted: true,
+      isPending: true,
+      zipcodes: "",
+      cities: "",
+      isError: false
+    });
     this.info = [];
-
     let cityName = this.state.value.toUpperCase();
 
     axios
       .get("http://ctp-zip-api.herokuapp.com/city/" + cityName)
       .then(response => {
         let zipcodes = response.data;
-        this.setState({ zipcodes: zipcodes, value: "" });
+        this.setState({ zipcodes: zipcodes, value: "", isError: false, isPending: false, isSubmitted: false });
         this.getCities();
       })
       .catch(error => {
-          this.setState({isError: true, isPending:false, isSubmitted: false})
+        this.setState({ isError: true, isPending: false, isSubmitted: false });
       });
   }
 
@@ -78,10 +83,13 @@ class App extends React.Component {
         .then(response => {
           this.info = this.info.concat(response.data);
           this.setStateForCities();
-          this.setState({ isPending: false });
         })
         .catch(error => {
-          this.setState({isError: true, isPending:false, isSubmitted: false})
+          this.setState({
+            isError: true,
+            isPending: false,
+            isSubmitted: false
+          });
         });
     }
   }
@@ -89,8 +97,12 @@ class App extends React.Component {
   render() {
     const { isPending, isSubmitted, isError } = this.state;
     let loader;
-    if (isError){
-      loader = <h2 className="center">Sorry, an error has ocurred or the city was not found.</h2>
+    if (isError) {
+      loader = (
+        <h2 className="center">
+          Sorry, an error has ocurred or the city was not found.
+        </h2>
+      );
     }
     if (isPending && isSubmitted) {
       loader = (
