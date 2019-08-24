@@ -1,11 +1,11 @@
 import React from "react";
 
 class ZipCodeDisplay extends React.Component {
-  getZipcodes() {
+  getZipCodes = () => {
     let container = [];
-    for (let i = 0; i < this.props.zipcodes.length; i++) {
+    for (let i = 0; i < this.props.zipCodes.length; i++) {
       container.push(
-        <li key={this.props.zipcodes[i]}>{this.props.zipcodes[i]}</li>
+        <li key={this.props.zipCodes[i]}>{this.props.zipCodes[i]}</li>
       );
     }
 
@@ -13,11 +13,11 @@ class ZipCodeDisplay extends React.Component {
   }
 
   render() {
-    if (this.props.zipcodes.length >= 1) {
+    if (this.props.zipCodes.length >= 1) {
       return (
         <div className="zip-code-container">
           <h2 className="sub-heading">All Available Zip Codes</h2>
-          <ul className="zipcode-list">{this.getZipcodes()}</ul>
+          <ul className="zipCode-list">{this.getZipCodes()}</ul>
         </div>
       );
     } else {
