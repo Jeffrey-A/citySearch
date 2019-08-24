@@ -25,7 +25,7 @@ class App extends React.Component {
     this.citiesContainer = [];
   }
 
-  resetState = () => {
+  updateState = () => {
     this.setState({
       isSubmitted: true,
       isPending: true,
@@ -36,8 +36,13 @@ class App extends React.Component {
     this.citiesContainer = [];
   };
 
+  /**
+   * Gets all the available zip codes of the given city.
+   *
+   * @param {string} cityName
+   */
   getZipCodes = cityName => {
-    this.resetState();
+    this.updateState();
     axios
       .get("http://ctp-zip-api.herokuapp.com/city/" + cityName)
       .then(response => {
@@ -58,6 +63,9 @@ class App extends React.Component {
       });
   };
 
+  /**
+   * Fetches information about each zip code.
+   */
   getCities = () => {
     for (let i = 0; i < this.state.zipCodes.length; i++) {
       axios
@@ -65,6 +73,7 @@ class App extends React.Component {
         .then(response => {
           this.citiesContainer = this.citiesContainer.concat(response.data);
 
+          // calls setState after fetching information about all the zip codes.
           if (i === this.state.zipCodes.length - 1) {
             this.setState({ cities: this.citiesContainer });
           }
@@ -79,6 +88,11 @@ class App extends React.Component {
     }
   };
 
+  /**
+   * Create city cards using the City component.
+   *
+   * @return JSX array.
+   */
   createCities = () => {
     let container = [];
 
@@ -101,7 +115,7 @@ class App extends React.Component {
 
   render() {
     const { isPending, isSubmitted, isError } = this.state;
-    let loader;
+    let loader; // holds the Loader container, or error message.
     if (isError) {
       loader = (
         <h2 className="center">
@@ -111,15 +125,7 @@ class App extends React.Component {
     }
     if (isPending && isSubmitted) {
       loader = (
-        <div
-          style={{
-            width: "100%",
-            height: "100",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center"
-          }}
-        >
+        <div className="loader-container">
           <Loader type="ThreeDots" color="#000000" height="100" width="100" />
         </div>
       );
