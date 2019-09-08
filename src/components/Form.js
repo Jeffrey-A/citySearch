@@ -4,7 +4,6 @@ import Header from "./Header";
 class Form extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       value: ""
     };
