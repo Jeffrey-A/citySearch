@@ -125,8 +125,11 @@ class App extends React.Component {
     }
     if (isPending && isSubmitted) {
       loader = (
-        <div className="loader-container">
-          <Loader type="ThreeDots" color="#000000" height="100" width="100" />
+        <div>
+          <p className="heroku-message">Awakening free heroku server - please be patient.</p>
+          <div className="loader-container">
+            <Loader type="ThreeDots" color="#000000" height="100" width="100" />
+          </div>
         </div>
       );
     }
