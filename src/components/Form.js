@@ -23,7 +23,7 @@ class Form extends React.Component {
       <div>
         <Header header="City Search" />
         <form className="input-getter-div" onSubmit={this.submit}>
-          <label htmlFor="input-box">City Name:</label>
+          {/* <label htmlFor="input-box">City Name:</label> */}
           <input
             onChange = {this.onValueChange}
             value={this.state.value}
